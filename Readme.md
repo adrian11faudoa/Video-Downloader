@@ -10,7 +10,7 @@
     Install yt-dlp <br>
     pip install yt-dlp <br>
 
-- Install FFmpeg (REQUIRED): 
+- Install FFmpeg (REQUIRED): <br>
     Download from: https://ffmpeg.org/download.html <br>
     Add ffmpeg/bin to PATH <br>
 
