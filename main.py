@@ -1,8 +1,10 @@
+# Imports
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
 import yt_dlp
 import threading
 import os
+
 
 def download():
     url = url_entry.get().strip()
@@ -48,6 +50,7 @@ def download():
     threading.Thread(target=run).start()
 
 
+
 def progress_hook(d):
     if d["status"] == "downloading":
         percent = d.get("_percent_str", "0%").strip()
@@ -56,13 +59,14 @@ def progress_hook(d):
         status_label.config(text="Processing file...")
 
 
+
 def browse_folder():
     folder = filedialog.askdirectory()
     if folder:
         download_path.set(folder)
 
 
-# ---------- GUI ----------
+# UI 
 root = tk.Tk()
 root.title("Video / Audio Downloader")
 root.geometry("500x300")
