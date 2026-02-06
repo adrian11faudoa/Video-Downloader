@@ -1,36 +1,34 @@
 # Video Downloader
 
-- Tech Stack: <br>
-    Python 3.10+ <br>
-    yt-dlp → download engine (YouTube, Vimeo, Twitter, etc.) <br>
-    FFmpeg → audio/video conversion <br>
-    Tkinter → GUI (built into Python) <br>
+## Tech Stack <br>
+>Python 3.10+ <br>
+>yt-dlp → download engine (YouTube, Vimeo, Twitter, etc.) <br>
+>FFmpeg → audio/video conversion <br>
+>Tkinter → GUI (built into Python) <br>
 
-- Install Requirements:<br>
-    Install yt-dlp <br>
-    pip install yt-dlp <br>
+## Install Requirements <br>
+Install yt-dlp <br>
+>pip install yt-dlp <br>
 
-- Install FFmpeg (REQUIRED): <br>
-    Download from: https://ffmpeg.org/download.html <br>
-    Add ffmpeg/bin to PATH <br>
+## ✅ Install FFmpeg (REQUIRED)  <br>
+Download from: https://ffmpeg.org/download.html <br>
+Add ffmpeg/bin to PATH <br>
+Run ffmpeg -version <br>
 
-- Test: <br>
-    ffmpeg -version <br>
-
-- Code Structure:  <br>
+Code Structure:  <br>
     🟢Imports : Added <br>
 
 
 Run the App: <br>
-python downloader_app.py <br>
+    python downloader_app.py <br>
 
 
 - You now have: <br>
-✔ GUI <br>
-✔ Video download <br>
-✔ Audio (MP3) extraction <br>
-✔ YouTube + many other sites <br>
-✔ Playlist support <br>
+GUI <br>
+Video download <br>
+Audio (MP3) extraction <br>
+YouTube + many other sites <br>
+Playlist support <br>
 
 
 - Supported Sites (via yt-dlp) <br>
