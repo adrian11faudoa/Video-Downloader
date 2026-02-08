@@ -15,15 +15,15 @@ Download from: https://ffmpeg.org/download.html <br>
 Add ffmpeg/bin to PATH <br>
 Run ffmpeg -version <br>
 
-Code Structure:  <br>
+## Code Structure:  <br>
     🟢Imports : Added <br>
 
 
-Run the App: <br>
+## Run the App: <br>
     python downloader_app.py <br>
 
 
-You now have: <br>
+## You now have: <br>
     GUI <br>
     Video download <br>
     Audio (MP3) extraction <br>
@@ -31,7 +31,7 @@ You now have: <br>
     Playlist support <br>
 
 
-Supported Sites (via yt-dlp) <br>
+## Supported Sites (via yt-dlp) <br>
     YouTube <br>
     Vimeo <br>
     Twitter / X <br>
@@ -41,22 +41,22 @@ Supported Sites (via yt-dlp) <br>
     Hundreds more <br>
 
 
-Upgrade Ideas (Next Level 🚀) <br>
+## Upgrade Ideas (Next Level 🚀) <br>
     If you want to evolve this into a real product: <br>
 
-UI <br>
+## UI <br>
     Progress bar <br>
     Dark mode <br>
     Video quality selector (720p / 1080p / 4K) <br>
     Thumbnail preview <br>
 
-Features <br>
+## Features <br>
     Playlist checkbox <br>
     Subtitle download <br>
     Format chooser (MP4, MKV, M4A, WAV) <br>
     Queue system (multiple URLs) <br>
 
-Packaging <br>
+## Packaging <br>
     Turn into .exe with PyInstaller <br>
     Build modern UI with CustomTkinter or PySide6 <br>
     Add auto-update <br>
