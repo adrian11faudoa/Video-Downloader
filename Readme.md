@@ -16,49 +16,49 @@ Add ffmpeg/bin to PATH <br>
 Run ffmpeg -version <br>
 
 ## Code Structure:  <br>
-    🟢Imports : Added <br>
+    🟢Imports : Added 
 
 
 ## Run the App: <br>
-    python downloader_app.py <br>
+    python downloader_app.py 
 
 
 ## You now have: <br>
-    GUI <br>
-    Video download <br>
-    Audio (MP3) extraction <br>
-    YouTube + many other sites <br>
-    Playlist support <br>
+    GUI 
+    Video download 
+    Audio (MP3) extraction 
+    YouTube + many other sites 
+    Playlist support 
 
 
 ## Supported Sites (via yt-dlp) <br>
-    YouTube <br>
-    Vimeo <br>
-    Twitter / X <br>
-    TikTok <br>
-    Facebook <br>
-    Instagram <br>
-    Hundreds more <br>
+    YouTube 
+    Vimeo 
+    Twitter / X 
+    TikTok 
+    Facebook 
+    Instagram 
+    Hundreds more 
 
 
 ## Upgrade Ideas (Next Level 🚀) <br>
-    If you want to evolve this into a real product: <br>
+    If you want to evolve this into a real product: 
 
 ## UI <br>
-    Progress bar <br>
-    Dark mode <br>
-    Video quality selector (720p / 1080p / 4K) <br>
-    Thumbnail preview <br>
+    Progress bar 
+    Dark mode 
+    Video quality selector (720p / 1080p / 4K) 
+    Thumbnail preview 
 
 ## Features <br>
-    Playlist checkbox <br>
-    Subtitle download <br>
-    Format chooser (MP4, MKV, M4A, WAV) <br>
-    Queue system (multiple URLs) <br>
+    Playlist checkbox 
+    Subtitle download 
+    Format chooser (MP4, MKV, M4A, WAV) 
+    Queue system (multiple URLs) 
 
 ## Packaging <br>
-    Turn into .exe with PyInstaller <br>
-    Build modern UI with CustomTkinter or PySide6 <br>
-    Add auto-update <br>
+    Turn into .exe with PyInstaller 
+    Build modern UI with CustomTkinter or PySide6 
+    Add auto-update 
 
 
