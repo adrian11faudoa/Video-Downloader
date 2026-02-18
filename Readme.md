@@ -45,8 +45,12 @@ Hundreds more <br>
 
     python downloader_app.py 
 
+## Version 1 <br>
 ### Code Structure:  <br>
-🟢Imports : Added 
+🟢Imports : Added <br>
+🟢Download Function : Added <br>
+🟢Progress Hook : Added <br>
+🟢UI Setup : Added <br>
 
 
 
