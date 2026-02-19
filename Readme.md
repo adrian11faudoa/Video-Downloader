@@ -1,8 +1,6 @@
 # Video Downloader
 
-## Version 1
-
-### You now have: <br>
+### Characteristics: <br>
 GUI <br>
 Video download <br>
 Audio (MP3) extraction <br>
