@@ -1,6 +1,17 @@
-# Video Downloader
+# Video Downloader: Version 1
 
-### Characteristics: <br>
+### Create virtual enviroment
+  python -m venv .venv
+
+## Install libraries
+  pip install yt-dlp 
+
+## Run program
+  .\.venv\Scripts\activate
+
+  python main.py
+
+### Characteristics <br>
 GUI <br>
 Video download <br>
 Audio (MP3) extraction <br>
@@ -20,10 +31,6 @@ yt-dlp → download engine (YouTube, Vimeo, Twitter, etc.) <br>
 FFmpeg → audio/video conversion <br>
 Tkinter → GUI (built into Python) <br>
 
-### Install Requirements <br>
-Install yt-dlp <br>
-    
-    pip install yt-dlp 
 
 ### Install FFmpeg (REQUIRED)  <br>
 Download from: https://ffmpeg.org/download.html <br>
@@ -39,9 +46,6 @@ Facebook <br>
 Instagram <br>
 Hundreds more <br>
 
-### Run the App: <br>
-
-    python downloader_app.py 
 
 ## Version 1 <br>
 ### Code Structure:  <br>
