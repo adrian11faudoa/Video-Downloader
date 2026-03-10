@@ -1,15 +1,18 @@
 # Video Downloader: Version 1
 
-### Create virtual enviroment
+### Create Virtual Enviroment
   python -m venv .venv
 
-## Install libraries
+### Libraries
   pip install yt-dlp 
 
-## Run program
+### Virtual Enviroment
   .\.venv\Scripts\activate
+  deactivate
 
+### Run Program
   python main.py
+
 
 ### Characteristics <br>
 GUI <br>
