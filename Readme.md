@@ -75,3 +75,15 @@ Build modern UI with CustomTkinter or PySide6 <br>
 Add auto-update <br>
 
 
+
+
+
+
+UpCloud
+
+
+https://cataz.to/
+
+Anuncios pup up
+
+https://cataz.to/watch-movie/watch-greenland-2-migration-2026-141559.12966505
