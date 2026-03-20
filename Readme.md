@@ -18,7 +18,6 @@
 GUI <br>
 Video download <br>
 Audio (MP3) extraction <br>
-YouTube + many other sites <br>
 Playlist support <br>
 
 ### Features <br>
@@ -47,8 +46,6 @@ Twitter / X <br>
 TikTok <br>
 Facebook <br>
 Instagram <br>
-Hundreds more <br>
-
 
 ## Version 1 <br>
 ### Code Structure:  <br>
@@ -58,32 +55,20 @@ Hundreds more <br>
 🟢UI Setup : Added <br>
 
 
-
-### Upgrade Ideas (V2) <br>
-If you want to evolve this into a real product: 
-
+## Updates
 ### UI <br>
 Progress bar <br>
-Dark mode <br>
 Video quality selector (720p / 1080p / 4K) <br>
 Thumbnail preview <br>
 
 
 ### Packaging <br>
 Turn into .exe with PyInstaller <br>
-Build modern UI with CustomTkinter or PySide6 <br>
-Add auto-update <br>
 
 
-
-
-
-
-UpCloud
-
-
+## Check Web Page
 https://cataz.to/
-
+UpCloud
 Anuncios pup up
-
 https://cataz.to/watch-movie/watch-greenland-2-migration-2026-141559.12966505
+
