@@ -65,10 +65,21 @@ Thumbnail preview <br>
 ### Packaging <br>
 Turn into .exe with PyInstaller <br>
 
-
 ## Check Web Page
 https://cataz.to/
 UpCloud
 Anuncios pup up
 https://cataz.to/watch-movie/watch-greenland-2-migration-2026-141559.12966505
+
+
+## Version 2 <br>
+### Code Structure:  <br>
+⚪Imports <br>
+⚪Download Function <br>
+⚪Progress Hook <br>
+⚪UI Setup <br>
+
+
+
+🔵🟢
 
