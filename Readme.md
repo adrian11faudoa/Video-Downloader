@@ -1,5 +1,5 @@
 # Video Downloader: Version 1
-
+🟢🔵⚪🟡🔴
 ### Create Virtual Enviroment
   python -m venv .venv
 
@@ -47,7 +47,7 @@ TikTok <br>
 Facebook <br>
 Instagram <br>
 
-## Version 1 <br>
+## Version 1 <br> 
 ### Code Structure:  <br>
 🟢Imports : Added <br>
 🟢Download Function : Added <br>
@@ -81,5 +81,5 @@ https://cataz.to/watch-movie/watch-greenland-2-migration-2026-141559.12966505
 
 
 
-🔵🟢
+
 
