@@ -1,53 +1,11 @@
 # Imports
 import tkinter as tk
-from tkinter import messagebox, filedialog
+from tkinter import ttk, messagebox, filedialog
 import yt_dlp
 import threading
 import os
-import requests
-import re
 
-
-# 🔎 Extract real video stream (for cataz)
-def extract_stream_url(page_url):
-    headers = {
-        "User-Agent": "Mozilla/5.0",
-        "Referer": "https://cataz.to/"
-    }
-
-    try:
-        # Get main page
-        res = requests.get(page_url, headers=headers)
-        html = res.text
-
-        # Find all iframes
-        iframes = re.findall(r'<iframe.*?src="(.*?)"', html)
-
-        for iframe_url in iframes:
-
-            if iframe_url.startswith("/"):
-                iframe_url = "https://cataz.to" + iframe_url
-
-            try:
-                res2 = requests.get(iframe_url, headers=headers)
-                html2 = res2.text
-
-                # Find .m3u8 stream
-                m3u8 = re.search(r'https?://[^"]+\.m3u8[^"]*', html2)
-
-                if m3u8:
-                    return m3u8.group(0)
-
-            except:
-                continue
-
-    except:
-        return None
-
-    return None
-
-
-# 📥 Download Function
+# Download Function
 def download():
     url = url_entry.get().strip()
     mode = download_type.get()
@@ -63,23 +21,10 @@ def download():
 
     def run():
         try:
-            status_label.config(text="Preparing...")
-
             ydl_opts = {
                 "outtmpl": os.path.join(folder, "%(title)s.%(ext)s"),
-                "noplaylist": True,
+                "noplaylist": False,
                 "progress_hooks": [progress_hook],
-
-                "http_headers": {
-                    "User-Agent": "Mozilla/5.0",
-                    "Referer": url
-                },
-
-                "extractor_args": {
-                    "generic": {
-                        "impersonate": "chrome"
-                    }
-                }
             }
 
             if mode == "audio":
@@ -94,37 +39,18 @@ def download():
             else:
                 ydl_opts["format"] = "bestvideo+bestaudio/best"
 
-            real_url = url
-
-            # 🔥 Detect cataz
-            if "cataz.to" in url:
-                status_label.config(text="Extracting real video...")
-                stream_url = extract_stream_url(url)
-
-                if not stream_url:
-                    messagebox.showerror("Error", "Could not find video stream")
-                    status_label.config(text="")
-                    return
-
-                real_url = stream_url
-                print("REAL STREAM:", real_url)
-
-            status_label.config(text="Downloading...")
-
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                ydl.download([real_url])
+                ydl.download([url])
 
-            status_label.config(text="Done!")
             messagebox.showinfo("Success", "Download completed!")
 
         except Exception as e:
-            status_label.config(text="")
             messagebox.showerror("Error", str(e))
 
     threading.Thread(target=run).start()
 
 
-# 📊 Progress Hook
+# Progress Hook
 def progress_hook(d):
     if d["status"] == "downloading":
         percent = d.get("_percent_str", "0%").strip()
@@ -133,40 +59,35 @@ def progress_hook(d):
         status_label.config(text="Processing file...")
 
 
-# 📁 Browse folder
+
 def browse_folder():
     folder = filedialog.askdirectory()
     if folder:
         download_path.set(folder)
 
 
-# 🎨 UI Setup
+# UI Setup
 root = tk.Tk()
 root.title("Video / Audio Downloader")
 root.geometry("500x300")
 root.resizable(False, False)
 
 tk.Label(root, text="Video URL").pack(pady=5)
-
 url_entry = tk.Entry(root, width=60)
 url_entry.pack()
-
 download_type = tk.StringVar(value="video")
+
 
 frame = tk.Frame(root)
 frame.pack(pady=10)
-
 tk.Radiobutton(frame, text="Video", variable=download_type, value="video").pack(side="left", padx=10)
 tk.Radiobutton(frame, text="Audio (MP3)", variable=download_type, value="audio").pack(side="left", padx=10)
-
 download_path = tk.StringVar()
 
 path_frame = tk.Frame(root)
 path_frame.pack(pady=10)
-
 tk.Entry(path_frame, textvariable=download_path, width=40).pack(side="left")
 tk.Button(path_frame, text="Browse", command=browse_folder).pack(side="left", padx=5)
-
 tk.Button(root, text="Download", command=download, bg="#4CAF50", fg="white").pack(pady=15)
 
 status_label = tk.Label(root, text="")
