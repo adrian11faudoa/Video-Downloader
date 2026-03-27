@@ -7,11 +7,11 @@
   pip install yt-dlp 
 
 ### Virtual Enviroment
-  .\.venv\Scripts\activate
-  deactivate
+.\.venv\Scripts\activate
+deactivate
 
 ### Run Program
-  python main.py
+python main.py
 
 
 ### Characteristics <br>

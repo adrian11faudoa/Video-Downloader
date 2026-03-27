@@ -1,21 +1,11 @@
-# Advanced Downloader with Queue, Progress Bar, Multi-threading
-
 import tkinter as tk
-from tkinter import ttk, filedialog, messagebox
+from tkinter import ttk, messagebox, filedialog
 import yt_dlp
 import threading
-import queue
 import os
 
 # =========================
-# Globals
-# =========================
-download_queue = queue.Queue()
-is_paused = False
-is_downloading = False
-
-# =========================
-# UI Functions
+# Functions
 # =========================
 
 def browse_folder():
@@ -30,172 +20,128 @@ def browse_file():
         file_path_var.set(file)
 
 
-def add_to_queue():
+def download():
     urls = []
 
-    if url_entry.get().strip():
-        urls.append(url_entry.get().strip())
+    # Get single URL
+    single_url = url_entry.get().strip()
+    if single_url:
+        urls.append(single_url)
 
-    if file_path_var.get():
-        with open(file_path_var.get(), "r", encoding="utf-8") as f:
-            urls.extend([line.strip() for line in f if line.strip()])
+    # Get URLs from file
+    file_path = file_path_var.get()
+    if file_path:
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                file_urls = [line.strip() for line in f if line.strip()]
+                urls.extend(file_urls)
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to read file:\n{e}")
+            return
 
-    for url in urls:
-        download_queue.put({
-            "url": url,
-            "format": format_var.get(),
-            "type": type_var.get()
-        })
-        queue_list.insert(tk.END, url)
+    folder = download_path.get()
 
-
-def start_download():
-    global is_downloading
-    if is_downloading:
+    if not urls:
+        messagebox.showerror("Error", "Please enter a URL or select a file")
         return
 
-    is_downloading = True
-    threading.Thread(target=process_queue, daemon=True).start()
+    if not folder:
+        messagebox.showerror("Error", "Please select a download folder")
+        return
 
+    mode = download_type.get()
 
-def pause_download():
-    global is_paused
-    is_paused = True
-
-
-def resume_download():
-    global is_paused
-    is_paused = False
-
-
-# =========================
-# Download Logic
-# =========================
-
-def process_queue():
-    global is_downloading
-
-    while not download_queue.empty():
-        while is_paused:
-            continue
-
-        item = download_queue.get()
-        url = item["url"]
-        fmt = item["format"]
-        typ = item["type"]
-
-        status_label.config(text=f"Downloading: {url}")
-
+    def run():
         try:
-            ydl_opts = {
-                "outtmpl": os.path.join(download_path.get(), "%(title)s_%(id)s.%(ext)s"),
-                "progress_hooks": [progress_hook],
-                "concurrent_fragment_downloads": 5,
-            }
+            for url in urls:
+                status_label.config(text=f"Starting: {url}")
 
-            if typ == "audio":
-                ydl_opts.update({
-                    "format": "bestaudio/best",
-                    "postprocessors": [{
-                        "key": "FFmpegExtractAudio",
-                        "preferredcodec": fmt,
-                    }],
-                })
-            else:
-                ydl_opts["format"] = fmt
+                ydl_opts = {
+                    "outtmpl": os.path.join(folder, "%(title)s_%(id)s.%(ext)s"),
+                    "noplaylist": False,
+                    "progress_hooks": [progress_hook],
+                    "concurrent_fragment_downloads": 5,
+                }
 
-            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                ydl.download([url])
+                if mode == "audio":
+                    ydl_opts.update({
+                        "format": "bestaudio/best",
+                        "postprocessors": [{
+                            "key": "FFmpegExtractAudio",
+                            "preferredcodec": "mp3",
+                            "preferredquality": "192",
+                        }],
+                    })
+                else:
+                    ydl_opts["format"] = "bestvideo+bestaudio/best"
+
+                with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                    ydl.download([url])
+
+            status_label.config(text="All downloads completed!")
+            messagebox.showinfo("Success", "All downloads completed!")
 
         except Exception as e:
-            print("Error:", e)
+            messagebox.showerror("Error", str(e))
 
-        download_queue.task_done()
-        queue_list.delete(0)
+    threading.Thread(target=run, daemon=True).start()
 
-    is_downloading = False
-    status_label.config(text="All downloads completed")
-
-
-# =========================
-# Progress Hook
-# =========================
 
 def progress_hook(d):
-    if d['status'] == 'downloading':
-        total = d.get('total_bytes') or d.get('total_bytes_estimate')
-        downloaded = d.get('downloaded_bytes', 0)
-
-        if total:
-            percent = int(downloaded / total * 100)
-            progress_bar['value'] = percent
-            root.update_idletasks()
-
-    elif d['status'] == 'finished':
-        progress_bar['value'] = 100
+    if d["status"] == "downloading":
+        percent = d.get("_percent_str", "0%").strip()
+        status_label.config(text=f"Downloading: {percent}")
+    elif d["status"] == "finished":
+        status_label.config(text="Processing file...")
 
 
 # =========================
-# UI
+# UI Setup
 # =========================
 
 root = tk.Tk()
-root.title("Advanced Downloader")
-root.geometry("600x500")
+root.title("Video / Audio Downloader")
+root.geometry("520x350")
+root.resizable(False, False)
 
-# URL
-url_entry = tk.Entry(root, width=70)
-url_entry.pack(pady=5)
+# URL input
+tk.Label(root, text="Video URL").pack(pady=5)
+url_entry = tk.Entry(root, width=65)
+url_entry.pack()
 
-# File loader
+# Download type
+download_type = tk.StringVar(value="video")
+
+frame = tk.Frame(root)
+frame.pack(pady=10)
+
+tk.Radiobutton(frame, text="Video", variable=download_type, value="video").pack(side="left", padx=10)
+tk.Radiobutton(frame, text="Audio (MP3)", variable=download_type, value="audio").pack(side="left", padx=10)
+
+# File input (.txt)
 file_path_var = tk.StringVar()
+
 file_frame = tk.Frame(root)
-file_frame.pack()
+file_frame.pack(pady=5)
 
-tk.Entry(file_frame, textvariable=file_path_var, width=50).pack(side="left")
-tk.Button(file_frame, text="Load .txt", command=browse_file).pack(side="left")
+tk.Entry(file_frame, textvariable=file_path_var, width=45).pack(side="left")
+tk.Button(file_frame, text="Load .txt", command=browse_file).pack(side="left", padx=5)
 
-# Folder
-
+# Folder selection
 download_path = tk.StringVar()
+
 path_frame = tk.Frame(root)
-path_frame.pack(pady=5)
+path_frame.pack(pady=10)
 
-tk.Entry(path_frame, textvariable=download_path, width=50).pack(side="left")
-tk.Button(path_frame, text="Folder", command=browse_folder).pack(side="left")
+tk.Entry(path_frame, textvariable=download_path, width=45).pack(side="left")
+tk.Button(path_frame, text="Browse Folder", command=browse_folder).pack(side="left", padx=5)
 
-# Type (video/audio)
-type_var = tk.StringVar(value="video")
+# Download button
+tk.Button(root, text="Download", command=download, bg="#4CAF50", fg="white", width=20).pack(pady=15)
 
-tk.Radiobutton(root, text="Video", variable=type_var, value="video").pack()
-tk.Radiobutton(root, text="Audio", variable=type_var, value="audio").pack()
-
-# Format selection
-format_var = tk.StringVar(value="best")
-
-tk.Label(root, text="Format (video: best/mp4, audio: mp3/wav)").pack()
-tk.Entry(root, textvariable=format_var).pack()
-
-# Queue list
-queue_list = tk.Listbox(root, width=80, height=10)
-queue_list.pack(pady=10)
-
-# Buttons
-btn_frame = tk.Frame(root)
-btn_frame.pack()
-
-tk.Button(btn_frame, text="Add to Queue", command=add_to_queue).pack(side="left")
-tk.Button(btn_frame, text="Start", command=start_download).pack(side="left")
-tk.Button(btn_frame, text="Pause", command=pause_download).pack(side="left")
-tk.Button(btn_frame, text="Resume", command=resume_download).pack(side="left")
-
-# Progress bar
-progress_bar = ttk.Progressbar(root, length=400, mode='determinate')
-progress_bar.pack(pady=10)
-
-# Status
-status_label = tk.Label(root, text="Idle")
+# Status label
+status_label = tk.Label(root, text="")
 status_label.pack()
 
+# Run app
 root.mainloop()
-
