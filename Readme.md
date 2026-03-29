@@ -91,4 +91,8 @@ Sequential processing (stable + safe for yt_dlp)
 Thread-safe UI updates
 
 
+Version 4
+Pause / Resume queue 
+Per-download progress bars 
+Format selector (mp4, mkv, wav, etc.)
 
