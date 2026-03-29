@@ -83,11 +83,12 @@ https://cataz.to/watch-movie/watch-greenland-2-migration-2026-141559.12966505
 
 
 Version 3
-What you now have:
-✅ Progress bar (real %)
-✅ Download queue system
-✅ Pause / Resume
-✅ Multi-threaded processing
-✅ Per-item format selection
-✅ Audio extraction with selectable formats (mp3, wav, etc.)
-✅ .txt batch support
+Multi-link input box (queue)
+“Queued / Processing / Done” sections
+Links move automatically between sections
+Can add links while downloading
+Sequential processing (stable + safe for yt_dlp)
+Thread-safe UI updates
+
+
+
