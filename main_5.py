@@ -135,8 +135,23 @@ def download_single(url):
 
 def progress_hook(d, url):
     if d["status"] == "downloading":
-        percent = d.get("_percent_str", "0%").strip()
-        root.after(0, lambda: update_progress(url, percent))
+        # Use _percent_str or calculate from downloaded/total bytes
+        percent_str = d.get("_percent_str", "")
+        
+        # Strip ANSI escape codes and extract just the number+%
+        import re
+        clean = re.sub(r'\x1b\[[0-9;]*m', '', percent_str).strip()
+        
+        # Fallback: calculate manually from bytes
+        if not clean or "%" not in clean:
+            downloaded = d.get("downloaded_bytes", 0)
+            total = d.get("total_bytes") or d.get("total_bytes_estimate", 0)
+            if total:
+                clean = f"{downloaded / total * 100:.1f}%"
+            else:
+                clean = "..."
+        
+        root.after(0, lambda p=clean: update_progress(url, p))
 
 
 # =========================
