@@ -96,3 +96,8 @@ Pause / Resume queue
 Per-download progress bars 
 Format selector (mp4, mkv, wav, etc.)
 
+
+Version 5
+Open at ~80% of your screen size
+Be fully visible without manual resizing
+
