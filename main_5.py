@@ -12,19 +12,10 @@ import time
 download_queue = Queue()
 is_downloading = False
 paused = False
-current_tasks = {}
 
 # =========================
 # Functions
 # =========================
-
-def check_ffmpeg():
-    try:
-        import subprocess
-        subprocess.run(["ffmpeg", "-version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        return True
-    except Exception:
-        return False
 
 def browse_folder():
     folder = filedialog.askdirectory()
@@ -49,12 +40,6 @@ def add_links():
 def start_download():
     global is_downloading, paused
 
-    # Check FFmpeg if needed
-    if format_var.get() in ["mp3", "wav"] and not check_ffmpeg():
-        messagebox.showerror("FFmpeg Missing", "FFmpeg is required for audio conversion (MP3/WAV). Please install it and add it to PATH.")
-        return
-    global is_downloading, paused
-
     if is_downloading:
         paused = False
         return
@@ -64,7 +49,7 @@ def start_download():
         return
 
     if not download_path.get():
-        messagebox.showerror("Error", "Select folder")
+        messagebox.showerror("Error", "Select a download folder first")
         return
 
     is_downloading = True
@@ -91,7 +76,7 @@ def process_queue():
             download_single(url)
             root.after(0, lambda u=url: move_to_done(u))
         except Exception as e:
-            root.after(0, lambda: messagebox.showerror("Error", str(e)))
+            root.after(0, lambda err=e: messagebox.showerror("Error", str(err)))
 
     is_downloading = False
 
@@ -100,6 +85,7 @@ def move_to_processing(url):
     if queue_list.exists(url):
         queue_list.delete(url)
     processing_list.insert("", "end", iid=url, values=(url, "Processing", "0%"))
+    notebook.select(1)  # Switch to Processing tab
 
 
 def move_to_done(url):
@@ -152,72 +138,81 @@ def progress_hook(d, url):
         percent = d.get("_percent_str", "0%").strip()
         root.after(0, lambda: update_progress(url, percent))
 
+
 # =========================
 # UI
 # =========================
 
 root = tk.Tk()
 root.title("Downloader Pro")
+root.geometry("900x650")
+root.minsize(700, 550)
 
-# Make window auto-fit screen
-screen_width = root.winfo_screenwidth()
-screen_height = root.winfo_screenheight()
+# --- Top: URL Input ---
+input_frame = tk.LabelFrame(root, text="Add URLs (one per line)", padx=5, pady=5)
+input_frame.pack(fill="x", padx=10, pady=(10, 0))
 
-# Set to ~80% of screen size
-window_width = int(screen_width * 0.8)
-window_height = int(screen_height * 0.8)
+input_box = tk.Text(input_frame, height=4)
+input_box.pack(fill="x", side="left", expand=True)
 
-root.geometry(f"{window_width}x{window_height}")
-root.minsize(800, 500)
+tk.Button(input_frame, text="Add Links", command=add_links, width=12).pack(side="left", padx=(8, 0))
 
-# Allow resizing
-root.rowconfigure(2, weight=1)
-root.columnconfigure(0, weight=1)
-
-# Input
-input_box = tk.Text(root, height=4)
-input_box.pack(fill="x", padx=10, pady=5)
-
-tk.Button(root, text="Add Links", command=add_links).pack()
-
-# Tables
-frame = tk.Frame(root)
-frame.pack(fill="both", expand=True)
+# --- Middle: Tabbed Tables ---
+notebook = ttk.Notebook(root)
+notebook.pack(fill="both", expand=True, padx=10, pady=8)
 
 columns = ("URL", "Status", "Progress")
 
-queue_list = ttk.Treeview(frame, columns=columns, show="headings")
-processing_list = ttk.Treeview(frame, columns=columns, show="headings")
-done_list = ttk.Treeview(frame, columns=columns, show="headings")
-
-for tree, title in [(queue_list, "Queue"), (processing_list, "Processing"), (done_list, "Done")]:
-    tree.heading("URL", text=title)
+def make_tree(parent):
+    frame = tk.Frame(parent)
+    tree = ttk.Treeview(frame, columns=columns, show="headings")
+    tree.heading("URL", text="URL")
     tree.heading("Status", text="Status")
     tree.heading("Progress", text="Progress")
+    tree.column("URL", width=580, stretch=True)
+    tree.column("Status", width=120, anchor="center")
+    tree.column("Progress", width=100, anchor="center")
+    vsb = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)
+    tree.configure(yscrollcommand=vsb.set)
     tree.pack(side="left", fill="both", expand=True)
+    vsb.pack(side="right", fill="y")
+    return frame, tree
+
+queue_frame, queue_list = make_tree(notebook)
+processing_frame, processing_list = make_tree(notebook)
+done_frame, done_list = make_tree(notebook)
+
+notebook.add(queue_frame, text="  Queue  ")
+notebook.add(processing_frame, text="  Processing  ")
+notebook.add(done_frame, text="  Done  ")
+
+# --- Bottom bar ---
+bottom = tk.Frame(root)
+bottom.pack(fill="x", padx=10, pady=(0, 10))
 
 # Format selector
 format_var = tk.StringVar(value="mp4")
-format_frame = tk.Frame(root)
-format_frame.pack()
+fmt_frame = tk.LabelFrame(bottom, text="Format", padx=6, pady=4)
+fmt_frame.pack(side="left")
 
 for fmt in ["mp4", "mkv", "mp3", "wav"]:
-    tk.Radiobutton(format_frame, text=fmt.upper(), variable=format_var, value=fmt).pack(side="left")
+    tk.Radiobutton(fmt_frame, text=fmt.upper(), variable=format_var, value=fmt).pack(side="left", padx=4)
 
-# Folder
-path_frame = tk.Frame(root)
-path_frame.pack(fill="x", padx=10)
+# Folder picker
+folder_frame = tk.LabelFrame(bottom, text="Save to", padx=6, pady=4)
+folder_frame.pack(side="left", fill="x", expand=True, padx=10)
 
 download_path = tk.StringVar()
+tk.Entry(folder_frame, textvariable=download_path).pack(side="left", fill="x", expand=True)
+tk.Button(folder_frame, text="Browse", command=browse_folder).pack(side="left", padx=(6, 0))
 
-tk.Entry(path_frame, textvariable=download_path).pack(side="left", fill="x", expand=True)
-tk.Button(path_frame, text="Browse", command=browse_folder).pack(side="left", padx=5)
+# Control buttons
+ctrl_frame = tk.Frame(bottom)
+ctrl_frame.pack(side="right")
 
-# Controls
-control_frame = tk.Frame(root)
-control_frame.pack(pady=10)
-
-tk.Button(control_frame, text="Start / Resume", command=start_download, bg="green", fg="white").pack(side="left", padx=5)
-tk.Button(control_frame, text="Pause", command=pause_download, bg="orange").pack(side="left", padx=5)
+tk.Button(ctrl_frame, text="▶  Start / Resume", command=start_download,
+          bg="#27ae60", fg="white", font=("", 10, "bold"), padx=10, pady=6).pack(side="left", padx=4)
+tk.Button(ctrl_frame, text="⏸  Pause", command=pause_download,
+          bg="#e67e22", fg="white", font=("", 10, "bold"), padx=10, pady=6).pack(side="left", padx=4)
 
 root.mainloop()
