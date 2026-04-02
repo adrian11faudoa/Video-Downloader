@@ -98,4 +98,4 @@ Format selector (mp4, mkv, wav, etc.)
 
 
 Version 5
-
+Solve the problem with the UI space window when oppened 
